@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - JWT_SECRET=eventure-super-secret-key
+      - JWT_EXPIRES_IN=24h
+      - AUTH_SERVICE_PORT=3001
+      - USERS_SERVICE_PORT=3002
+      - FRIENDS_SERVICE_PORT=3003
+      - EVENTS_SERVICE_PORT=3004
+      - LEADERBOARD_SERVICE_PORT=3005
+    depends_on:
+      - auth-service
+      - users-service
+      - friends-service
+      - events-service
+      - leaderboard-service
+    volumes:
+      - ./uploads:/app/uploads
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - JWT_SECRET=eventure-super-secret-key
+
+  users-service:
+    build: ./users-service
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+
+  friends-service:
+    build: ./friends-service
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+
+  events-service:
+    build: ./events-service
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - UPLOAD_PATH=./uploads
+    volumes:
+      - ./uploads:/app/uploads
+
+  leaderboard-service:
+    build: ./leaderboard-service
+    ports:
+      - "3005:3005"
+    environment:
+      - PORT=3005
+
+volumes:
+  uploads:

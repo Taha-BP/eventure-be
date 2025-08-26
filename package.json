@@ -1,0 +1,32 @@
+{
+  "name": "eventure-be",
+  "version": "1.0.0",
+  "description": "Eventure - Track the Pulse of Friendship - Microservices Backend",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "npm install && cd api-gateway && npm install && cd ../auth-service && npm install && cd ../users-service && npm install && cd ../friends-service && npm install && cd ../events-service && npm install && cd ../leaderboard-service && npm install && cd ../shared-lib && npm install",
+    "start:gateway": "cd api-gateway && npm run start:dev",
+    "start:auth": "cd auth-service && npm run start:dev",
+    "start:users": "cd users-service && npm run start:dev",
+    "start:friends": "cd friends-service && npm run start:dev",
+    "start:events": "cd events-service && npm run start:dev",
+    "start:leaderboard": "cd leaderboard-service && npm run start:dev",
+    "start:all": "concurrently \"npm run start:gateway\" \"npm run start:auth\" \"npm run start:users\" \"npm run start:friends\" \"npm run start:events\" \"npm run start:leaderboard\"",
+    "build:all": "cd api-gateway && npm run build && cd ../auth-service && npm run build && cd ../users-service && npm run build && cd ../friends-service && npm run build && cd ../events-service && npm run build && cd ../leaderboard-service && npm run build",
+    "test:all": "cd api-gateway && npm run test && cd ../auth-service && npm run test && cd ../users-service && npm run test && cd ../friends-service && npm run test && cd ../events-service && npm run test && cd ../leaderboard-service && npm run test",
+    "lint:all": "cd api-gateway && npm run lint && cd ../auth-service && npm run lint && cd ../users-service && npm run lint && cd ../friends-service && npm run lint && cd ../events-service && npm run lint && cd ../leaderboard-service && npm run lint"
+  },
+  "keywords": [
+    "nestjs",
+    "microservices",
+    "eventure",
+    "friendship",
+    "events"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nestjs/cli": "^10.0.0",
+    "concurrently": "^8.2.2"
+  }
+}

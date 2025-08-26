@@ -1,0 +1,46 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Index,
+  OneToMany,
+} from "typeorm";
+import { Event } from "./event.entity";
+import { EventAcknowledgment } from "./event-acknowledgment.entity";
+import { Friendship } from "./friendship.entity";
+
+@Entity("users")
+export class User {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
+  @Column({ unique: true })
+  @Index()
+  email: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  password: string;
+
+  @OneToMany(() => Event, (event) => event.creator)
+  events: Event[];
+
+  @OneToMany(() => EventAcknowledgment, (acknowledgment) => acknowledgment.user)
+  acknowledgments: EventAcknowledgment[];
+
+  @OneToMany(() => Friendship, (friendship) => friendship.user)
+  friendships: Friendship[];
+
+  @OneToMany(() => Friendship, (friendship) => friendship.friend)
+  friendOf: Friendship[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
