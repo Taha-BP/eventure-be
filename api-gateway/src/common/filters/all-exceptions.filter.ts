@@ -3,6 +3,7 @@ import {
   Catch,
   ExceptionFilter,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { Response } from 'express';
@@ -16,8 +17,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let message = 'Something went wrong';
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
 
+    // Handle HTTP exceptions (like UnauthorizedException)
+    if (exception instanceof HttpException) {
+      status = exception.getStatus();
+      message = exception.message;
+    }
     // Handle RpcException
-    if (exception instanceof RpcException) {
+    else if (exception instanceof RpcException) {
       const error = exception.getError() as
         | { message?: string; statusCode?: number; code?: number }
         | string;

@@ -9,6 +9,7 @@ import {
   Event,
   EventAcknowledgment,
   Friendship,
+  Token,
   databaseConfig,
 } from '@eventure/shared-lib';
 
@@ -18,7 +19,13 @@ import {
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(databaseConfig),
-    TypeOrmModule.forFeature([User, Event, EventAcknowledgment, Friendship]),
+    TypeOrmModule.forFeature([
+      User,
+      Event,
+      EventAcknowledgment,
+      Friendship,
+      Token,
+    ]),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('JWT_SECRET'),

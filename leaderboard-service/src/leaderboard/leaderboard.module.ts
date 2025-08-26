@@ -8,6 +8,7 @@ import {
   Event,
   EventAcknowledgment,
   Friendship,
+  Token,
   databaseConfig,
 } from '@eventure/shared-lib';
 
@@ -17,7 +18,13 @@ import {
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(databaseConfig),
-    TypeOrmModule.forFeature([User, EventAcknowledgment, Event, Friendship]),
+    TypeOrmModule.forFeature([
+      User,
+      EventAcknowledgment,
+      Event,
+      Friendship,
+      Token,
+    ]),
   ],
   controllers: [LeaderboardController],
   providers: [LeaderboardService],

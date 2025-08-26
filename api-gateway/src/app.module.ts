@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthController } from './auth/auth.controller';
+import { AuthModule } from './auth/auth.module';
 import { UsersController } from './users/users.controller';
 import { FriendsController } from './friends/friends.controller';
 import { EventsController } from './events/events.controller';
@@ -12,6 +14,14 @@ import { LeaderboardController } from './leaderboard/leaderboard.controller';
 import { WebsocketGateway } from './websocket/websocket.gateway';
 import { MicroserviceClients } from './common/clients/microservice-clients';
 import { JwtStrategy } from './common/strategies/jwt.strategy';
+import {
+  databaseConfig,
+  Event,
+  EventAcknowledgment,
+  Friendship,
+  Token,
+  User,
+} from '@eventure/shared-lib';
 import configuration from './config/configuration';
 
 @Module({
@@ -20,6 +30,14 @@ import configuration from './config/configuration';
       isGlobal: true,
       load: [configuration],
     }),
+    TypeOrmModule.forRoot(databaseConfig),
+    TypeOrmModule.forFeature([
+      User,
+      Event,
+      EventAcknowledgment,
+      Friendship,
+      Token,
+    ]),
     PassportModule,
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
@@ -30,6 +48,7 @@ import configuration from './config/configuration';
       }),
       inject: [ConfigService],
     }),
+    AuthModule,
   ],
   controllers: [
     AppController,

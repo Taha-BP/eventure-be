@@ -8,16 +8,62 @@ import {
   LoginDto,
   AuthResponse,
   User,
+  Token,
+  TokenType,
 } from '@eventure/shared-lib';
 import { RpcException } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Token)
+    private readonly tokenRepository: Repository<Token>,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
+
+  private async createToken(
+    userId: string,
+    token: string,
+    type: TokenType = TokenType.ACCESS,
+  ): Promise<Token> {
+    const expiresIn = this.configService.get<string>('JWT_EXPIRES_IN') || '24h';
+    const expiresAt = new Date();
+
+    // Parse expiresIn (e.g., '24h', '7d', '30m')
+    const unit = expiresIn.slice(-1);
+    const value = parseInt(expiresIn.slice(0, -1));
+
+    switch (unit) {
+      case 'h':
+        expiresAt.setHours(expiresAt.getHours() + value);
+        break;
+      case 'd':
+        expiresAt.setDate(expiresAt.getDate() + value);
+        break;
+      case 'm':
+        expiresAt.setMinutes(expiresAt.getMinutes() + value);
+        break;
+      case 's':
+        expiresAt.setSeconds(expiresAt.getSeconds() + value);
+        break;
+      default:
+        expiresAt.setHours(expiresAt.getHours() + 24); // Default to 24 hours
+    }
+
+    const tokenEntity = this.tokenRepository.create({
+      token,
+      type,
+      userId,
+      expiresAt,
+      isActive: true,
+    });
+
+    return this.tokenRepository.save(tokenEntity);
+  }
 
   async register(registerDto: RegisterDto): Promise<AuthResponse> {
     const { email, name, password } = registerDto;
@@ -54,6 +100,9 @@ export class AuthService {
     };
     const token = this.jwtService.sign(payload);
 
+    // Create token entry in database
+    await this.createToken(savedUser.id, token, TokenType.ACCESS);
+
     return {
       token,
       user: {
@@ -88,6 +137,9 @@ export class AuthService {
     // Generate JWT token
     const payload = { sub: user.id, email: user.email, name: user.name };
     const token = this.jwtService.sign(payload);
+
+    // Create token entry in database
+    await this.createToken(user.id, token, TokenType.ACCESS);
 
     return {
       token,

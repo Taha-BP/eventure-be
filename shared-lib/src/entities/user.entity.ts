@@ -10,6 +10,7 @@ import {
 import { Event } from "./event.entity";
 import { EventAcknowledgment } from "./event-acknowledgment.entity";
 import { Friendship } from "./friendship.entity";
+import { Token } from "./token.entity";
 
 @Entity("users")
 export class User {
@@ -37,6 +38,9 @@ export class User {
 
   @OneToMany(() => Friendship, (friendship) => friendship.friend)
   friendOf: Friendship[];
+
+  @OneToMany(() => Token, (token) => token.user, { cascade: true })
+  tokens: Token[];
 
   @CreateDateColumn()
   createdAt: Date;
