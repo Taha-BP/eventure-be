@@ -1,26 +1,26 @@
-import { IsEmail, IsString, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString, IsOptional } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateUserDto {
   @ApiProperty({
-    description: 'User email address',
-    example: 'john.doe@example.com',
+    description: "User email address",
+    example: "john.doe@example.com",
     type: String,
   })
   @IsEmail()
   email: string;
 
   @ApiProperty({
-    description: 'User full name',
-    example: 'John Doe',
+    description: "User full name",
+    example: "John Doe",
     type: String,
   })
   @IsString()
   name: string;
 
   @ApiProperty({
-    description: 'User password',
-    example: 'password123',
+    description: "User password",
+    example: "password123",
     type: String,
   })
   @IsString()
@@ -29,8 +29,8 @@ export class CreateUserDto {
 
 export class UpdateUserDto {
   @ApiProperty({
-    description: 'User full name',
-    example: 'John Doe',
+    description: "User full name",
+    example: "John Doe",
     required: false,
     type: String,
   })
@@ -39,8 +39,8 @@ export class UpdateUserDto {
   name?: string;
 
   @ApiProperty({
-    description: 'User email address',
-    example: 'john.doe@example.com',
+    description: "User email address",
+    example: "john.doe@example.com",
     required: false,
     type: String,
   })
@@ -51,36 +51,36 @@ export class UpdateUserDto {
 
 export class UserResponse {
   @ApiProperty({
-    description: 'User ID',
-    example: 'user-123',
+    description: "User ID",
+    example: "123e4567-e89b-12d3-a456-426614174000",
     type: String,
   })
   id: string;
 
   @ApiProperty({
-    description: 'User email address',
-    example: 'john.doe@example.com',
+    description: "User email address",
+    example: "john.doe@example.com",
     type: String,
   })
   email: string;
 
   @ApiProperty({
-    description: 'User full name',
-    example: 'John Doe',
+    description: "User full name",
+    example: "John Doe",
     type: String,
   })
   name: string;
 
   @ApiProperty({
-    description: 'User creation date',
-    example: '2024-01-15T10:30:00.000Z',
+    description: "User creation date",
+    example: "2024-01-15T10:30:00.000Z",
     type: Date,
   })
   createdAt: Date;
 
   @ApiProperty({
-    description: 'User last update date',
-    example: '2024-01-15T10:30:00.000Z',
+    description: "User last update date",
+    example: "2024-01-15T10:30:00.000Z",
     type: Date,
   })
   updatedAt: Date;

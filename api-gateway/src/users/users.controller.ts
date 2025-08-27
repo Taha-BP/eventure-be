@@ -16,18 +16,24 @@ export class UsersController {
   constructor(private readonly microserviceClients: MicroserviceClients) {}
 
   @Get()
+  @UseGuards(CustomJwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({
     status: 200,
     description: 'List of all users retrieved successfully',
   })
   @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - invalid token',
+  })
+  @ApiResponse({
     status: 500,
     description: 'Internal server error',
   })
-  getAllUsers(): Observable<any> {
+  getAllUsers(@Request() req: AuthenticatedRequest): Observable<any> {
     const usersClient = this.microserviceClients.getUsersClient();
-    return usersClient.send('getAllUsers', {});
+    return usersClient.send('getAllUsers', { currentUserId: req.user.id });
   }
 
   @Get('profile')

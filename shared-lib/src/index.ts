@@ -15,6 +15,7 @@ export * from "./leaderboard/leaderboard.dto";
 
 // Common types
 export * from "./common/types";
+export * from "./common/dto";
 
 // WebSocket events
 export * from "./websocket/events";

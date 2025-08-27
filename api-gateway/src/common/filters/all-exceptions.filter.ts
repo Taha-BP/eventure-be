@@ -4,6 +4,7 @@ import {
   ExceptionFilter,
   HttpStatus,
   HttpException,
+  BadRequestException,
 } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { Response } from 'express';
@@ -17,8 +18,30 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let message = 'Something went wrong';
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
 
+    // Handle ValidationError from class-validator
+    if (exception instanceof BadRequestException) {
+      const exceptionResponse = exception.getResponse() as {
+        message?: string | string[];
+        statusCode?: number;
+      };
+
+      // Check if this is a validation error
+      if (
+        exceptionResponse.message &&
+        Array.isArray(exceptionResponse.message)
+      ) {
+        // Extract validation error messages
+        const validationMessages = exceptionResponse.message
+          .map((msg: string) => msg)
+          .join(', ');
+        message = `Validation failed: ${validationMessages}`;
+      } else {
+        message = (exceptionResponse.message as string) || exception.message;
+      }
+      status = exception.getStatus();
+    }
     // Handle HTTP exceptions (like UnauthorizedException)
-    if (exception instanceof HttpException) {
+    else if (exception instanceof HttpException) {
       status = exception.getStatus();
       message = exception.message;
     }

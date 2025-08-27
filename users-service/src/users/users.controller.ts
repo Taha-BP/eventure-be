@@ -8,8 +8,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @MessagePattern('getAllUsers')
-  async getAllUsers() {
-    return this.usersService.getAllUsers();
+  async getAllUsers(@Payload() data: { currentUserId: string }) {
+    return this.usersService.getAllUsers(data.currentUserId);
   }
 
   @MessagePattern('getUserById')

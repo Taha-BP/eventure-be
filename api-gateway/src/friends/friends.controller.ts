@@ -15,8 +15,13 @@ import {
 } from '@nestjs/swagger';
 import { MicroserviceClients } from '../common/clients/microservice-clients';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { AddFriendDto, FriendResponse } from '@eventure/shared-lib';
+import {
+  AddFriendDto,
+  FriendResponse,
+  MessageResponse,
+} from '@eventure/shared-lib';
 import { Observable } from 'rxjs';
+import { type AuthenticatedRequest } from '@eventure/shared-lib';
 
 interface RequestWithUser extends Request {
   user: {
@@ -61,7 +66,7 @@ export class FriendsController {
   @ApiResponse({
     status: 201,
     description: 'Friend added successfully',
-    type: FriendResponse,
+    type: MessageResponse,
   })
   @ApiResponse({
     status: 400,
@@ -73,12 +78,13 @@ export class FriendsController {
   })
   addFriend(
     @Body() addFriendDto: AddFriendDto,
-    @Request() req: RequestWithUser,
-  ): Observable<FriendResponse> {
-    const friendsClient = this.microserviceClients.getFriendsClient();
-    return friendsClient.send<FriendResponse>('addFriend', {
-      ...addFriendDto,
-      userId: req.user.userId,
-    });
+    @Request() req: AuthenticatedRequest,
+  ): Observable<MessageResponse> {
+    return this.microserviceClients
+      .getFriendsClient()
+      .send<MessageResponse>('addFriend', {
+        ...addFriendDto,
+        currentUserId: req.user.id,
+      });
   }
 }

@@ -1,14 +1,15 @@
-import { IsString, IsEmail } from "class-validator";
+import { IsEmail, IsUUID, IsOptional } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class AddFriendDto {
   @ApiProperty({
     description: "Friend user ID (either friendId or email is required)",
-    example: "user-456",
+    example: "123e4567-e89b-12d3-a456-426614174000",
     required: false,
     type: String,
   })
-  @IsString()
+  @IsOptional()
+  @IsUUID(undefined, { message: "friendId must be a valid UUID" })
   friendId?: string;
 
   @ApiProperty({
@@ -17,7 +18,8 @@ export class AddFriendDto {
     required: false,
     type: String,
   })
-  @IsEmail()
+  @IsOptional()
+  @IsEmail({}, { message: "email must be a valid email address" })
   email?: string;
 }
 
@@ -31,14 +33,14 @@ export class FriendResponse {
 
   @ApiProperty({
     description: "Current user ID",
-    example: "user-123",
+    example: "123e4567-e89b-12d3-a456-426614174000",
     type: String,
   })
   userId: string;
 
   @ApiProperty({
     description: "Friend user ID",
-    example: "user-456",
+    example: "123e4567-e89b-12d3-a456-426614174000",
     type: String,
   })
   friendId: string;
@@ -49,7 +51,7 @@ export class FriendResponse {
     properties: {
       id: {
         type: "string",
-        example: "user-456",
+        example: "123e4567-e89b-12d3-a456-426614174000",
         description: "Friend user ID",
       },
       name: {

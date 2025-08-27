@@ -63,7 +63,7 @@ export class AuthResponse {
     properties: {
       id: {
         type: "string",
-        example: "user-123",
+        example: "123e4567-e89b-12d3-a456-426614174000",
         description: "Unique user identifier",
       },
       email: {

@@ -1,6 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { FriendsService } from './friends.service';
+import { MessageResponse } from '@eventure/shared-lib';
 
 @Controller()
 export class FriendsController {
@@ -13,17 +14,17 @@ export class FriendsController {
 
   @MessagePattern('addFriend')
   async addFriend(
-    @Payload() data: { userId: string; friendId?: string; email?: string },
-  ) {
+    @Payload()
+    data: {
+      currentUserId: string;
+      friendId?: string;
+      email?: string;
+    },
+  ): Promise<MessageResponse> {
     const friendIdOrEmail = data.friendId || data.email;
     if (!friendIdOrEmail) {
       throw new Error('Either friendId or email must be provided');
     }
-    return this.friendsService.addFriend(data.userId, friendIdOrEmail);
-  }
-
-  @MessagePattern('getFriendIds')
-  async getFriendIds(@Payload() data: { userId: string }) {
-    return this.friendsService.getFriendIds(data.userId);
+    return this.friendsService.addFriend(data.currentUserId, friendIdOrEmail);
   }
 }
