@@ -8,7 +8,7 @@ import {
 import { MicroserviceClients } from '../common/clients/microservice-clients';
 import { Observable } from 'rxjs';
 import { type AuthenticatedRequest } from '@eventure/shared-lib';
-import { CustomJwtAuthGuard } from '../common/guards/custom-jwt-auth.guard';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -16,7 +16,7 @@ export class UsersController {
   constructor(private readonly microserviceClients: MicroserviceClients) {}
 
   @Get()
-  @UseGuards(CustomJwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({
@@ -37,7 +37,7 @@ export class UsersController {
   }
 
   @Get('profile')
-  @UseGuards(CustomJwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get current user profile' })
   @ApiResponse({

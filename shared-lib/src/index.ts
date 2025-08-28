@@ -23,6 +23,15 @@ export * from "./websocket/events";
 // Database configuration
 export * from "./config/database.config";
 
+// Common decorators
+export * from "./common/decorators";
+
+// Common filters
+export * from "./common/filters";
+
+// Common interceptors
+export * from "./common/interceptors";
+
 // Entities - export specific entities to avoid naming conflicts
 export {
   User,

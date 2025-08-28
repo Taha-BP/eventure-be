@@ -1,22 +1,12 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Index,
-  OneToMany,
-} from "typeorm";
+import { Entity, Column, Index, OneToMany } from "typeorm";
 import { Event } from "./event.entity";
 import { EventAcknowledgment } from "./event-acknowledgment.entity";
 import { Friendship } from "./friendship.entity";
 import { Token } from "./token.entity";
+import { Base } from "./base.entity";
 
 @Entity("users")
-export class User {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
+export class User extends Base {
   @Column({ unique: true })
   @Index()
   email: string;
@@ -41,10 +31,4 @@ export class User {
 
   @OneToMany(() => Token, (token) => token.user, { cascade: true })
   tokens: Token[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

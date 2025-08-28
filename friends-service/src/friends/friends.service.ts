@@ -4,6 +4,7 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import {
@@ -12,6 +13,7 @@ import {
   MessageResponse,
   User,
 } from '@eventure/shared-lib';
+import type { AddFriendPayload } from './types';
 
 @Injectable()
 export class FriendsService {
@@ -26,7 +28,7 @@ export class FriendsService {
     // Verify user exists
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new RpcException(new NotFoundException('User not found'));
     }
 
     const userFriendships = await this.friendshipRepository.find({
@@ -36,7 +38,9 @@ export class FriendsService {
 
     return userFriendships.map((friendship: Friendship) => {
       if (!friendship.friend) {
-        throw new Error('Friend relationship is missing user data');
+        throw new RpcException(
+          new Error('Friend relationship is missing user data'),
+        );
       }
       return {
         id: friendship.id,
@@ -52,24 +56,23 @@ export class FriendsService {
     });
   }
 
-  async addFriend(
-    currentUserId: string,
-    friendIdOrEmail: string,
-  ): Promise<MessageResponse> {
-    if (currentUserId === friendIdOrEmail) {
-      throw new BadRequestException('Cannot add yourself as a friend');
-    }
+  async addFriend(payload: AddFriendPayload): Promise<MessageResponse> {
+    const { currentUserId, friendId, email } = payload;
+
+    const friendIdOrEmail = friendId || email;
 
     const friend = await this.userRepository.findOne({
       where: [{ id: friendIdOrEmail }, { email: friendIdOrEmail }],
     });
 
     if (!friend) {
-      throw new NotFoundException('User not found');
+      throw new RpcException(new NotFoundException('User not found'));
     }
 
     if (friend.id === currentUserId) {
-      throw new BadRequestException('Cannot add yourself as a friend');
+      throw new RpcException(
+        new BadRequestException("Can't add yourself as a friend"),
+      );
     }
 
     const existingFriendship = await this.friendshipRepository.findOne({
@@ -80,20 +83,23 @@ export class FriendsService {
     });
 
     if (existingFriendship) {
-      throw new ConflictException('Friendship already exists');
+      throw new RpcException(
+        new ConflictException('Friendship already exists'),
+      );
     }
 
-    const friendship1 = this.friendshipRepository.create({
-      userId: currentUserId,
-      friendId: friend.id,
-    });
-
-    const friendship2 = this.friendshipRepository.create({
-      userId: friend.id,
-      friendId: currentUserId,
-    });
-
-    await this.friendshipRepository.save([friendship1, friendship2]);
+    await this.friendshipRepository.save(
+      this.friendshipRepository.create([
+        {
+          userId: currentUserId,
+          friendId: friend.id,
+        },
+        {
+          userId: friend.id,
+          friendId: currentUserId,
+        },
+      ]),
+    );
 
     return { message: 'Friendship added successfully' };
   }

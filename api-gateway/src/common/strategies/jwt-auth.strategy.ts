@@ -6,10 +6,7 @@ import { TokenService } from '../../auth/token.service';
 import { TokenType } from '@eventure/shared-lib';
 
 @Injectable()
-export class CustomJwtStrategy extends PassportStrategy(
-  Strategy,
-  'custom-jwt',
-) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'JWT-auth') {
   constructor(
     private configService: ConfigService,
     private tokenService: TokenService,
@@ -23,14 +20,12 @@ export class CustomJwtStrategy extends PassportStrategy(
   }
 
   async validate(request: any) {
-    // Extract the token from the request
     const token = ExtractJwt.fromAuthHeaderAsBearerToken()(request);
 
     if (!token) {
       throw new UnauthorizedException('Token not provided');
     }
 
-    // Validate token against database
     const tokenValidation = await this.tokenService.validateToken(
       token,
       TokenType.ACCESS,
@@ -42,12 +37,10 @@ export class CustomJwtStrategy extends PassportStrategy(
 
     const { user } = tokenValidation;
 
-    // Check if user exists and is active
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
 
-    // Return user information
     return user;
   }
 }

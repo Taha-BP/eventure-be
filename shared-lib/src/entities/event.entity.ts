@@ -1,21 +1,10 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  OneToMany,
-  JoinColumn,
-} from "typeorm";
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from "typeorm";
 import { EventAcknowledgment } from "./event-acknowledgment.entity";
 import { User } from "./user.entity";
+import { Base } from "./base.entity";
 
 @Entity("events")
-export class Event {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
+export class Event extends Base {
   @Column()
   title: string;
 
@@ -37,10 +26,4 @@ export class Event {
     (acknowledgment) => acknowledgment.event
   )
   acknowledgments: EventAcknowledgment[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

@@ -1,6 +1,17 @@
-import { IsEmail, IsUUID, IsOptional } from "class-validator";
+import {
+  IsEmail,
+  IsUUID,
+  ValidateIf,
+  Validate,
+  IsOptional,
+} from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
+import { RequireAtLeastOne } from "../common/decorators";
 
+@RequireAtLeastOne(
+  ["friendId", "email"],
+  "Either friendId or email is required"
+)
 export class AddFriendDto {
   @ApiProperty({
     description: "Friend user ID (either friendId or email is required)",

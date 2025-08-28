@@ -1,20 +1,10 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  ManyToOne,
-  JoinColumn,
-  Index,
-} from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn, Index } from "typeorm";
 import { User } from "./user.entity";
+import { Base } from "./base.entity";
 
 @Entity("friendships")
 @Index(["userId", "friendId"], { unique: true })
-export class Friendship {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
+export class Friendship extends Base {
   @Column()
   userId: string;
 
@@ -28,7 +18,4 @@ export class Friendship {
   @ManyToOne(() => User, { onDelete: "CASCADE" })
   @JoinColumn({ name: "friendId" })
   friend: User;
-
-  @CreateDateColumn()
-  createdAt: Date;
 }

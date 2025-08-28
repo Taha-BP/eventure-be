@@ -13,7 +13,7 @@ import { EventsController } from './events/events.controller';
 import { LeaderboardController } from './leaderboard/leaderboard.controller';
 import { WebsocketGateway } from './websocket/websocket.gateway';
 import { MicroserviceClients } from './common/clients/microservice-clients';
-import { JwtStrategy } from './common/strategies/jwt.strategy';
+import { JwtStrategy } from './common/strategies/jwt-auth.strategy';
 import {
   databaseConfig,
   Event,

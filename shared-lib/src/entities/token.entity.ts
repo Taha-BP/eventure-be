@@ -1,14 +1,6 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  Index,
-  ManyToOne,
-  JoinColumn,
-} from "typeorm";
+import { Entity, Column, Index, ManyToOne, JoinColumn } from "typeorm";
 import { User } from "./user.entity";
+import { Base } from "./base.entity";
 
 export enum TokenType {
   ACCESS = "access",
@@ -16,10 +8,7 @@ export enum TokenType {
 }
 
 @Entity("tokens")
-export class Token {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
+export class Token extends Base {
   @Column()
   @Index()
   token: string;
@@ -43,10 +32,4 @@ export class Token {
 
   @Column({ default: true })
   isActive: boolean;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 }

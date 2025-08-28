@@ -4,8 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Token, User } from '@eventure/shared-lib';
 import { TokenService } from './token.service';
-import { CustomJwtStrategy } from '../common/strategies/custom-jwt.strategy';
-import { CustomJwtAuthGuard } from '../common/guards/custom-jwt-auth.guard';
+import { JwtStrategy } from '../common/strategies/jwt-auth.strategy';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { CustomJwtAuthGuard } from '../common/guards/custom-jwt-auth.guard';
       inject: [ConfigService],
     }),
   ],
-  providers: [TokenService, CustomJwtStrategy, CustomJwtAuthGuard],
-  exports: [TokenService, CustomJwtAuthGuard, JwtModule],
+  providers: [TokenService, JwtStrategy, JwtAuthGuard],
+  exports: [TokenService, JwtAuthGuard, JwtModule],
 })
 export class AuthModule {}

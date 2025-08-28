@@ -13,14 +13,14 @@ export class UsersService {
   getAllUsers(currentUserId: string): Promise<User[]> {
     return this.userRepository.find({
       where: { id: Not(currentUserId) },
-      select: ['id', 'email', 'name', 'createdAt', 'updatedAt'],
+      select: ['id', 'email', 'name'],
     });
   }
 
   getUserById(id: string): Promise<UserResponse | null> {
     return this.userRepository.findOne({
       where: { id },
-      select: ['id', 'email', 'name', 'createdAt', 'updatedAt'],
+      select: ['id', 'email', 'name'],
     });
   }
 

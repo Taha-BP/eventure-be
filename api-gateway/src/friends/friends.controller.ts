@@ -14,7 +14,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { MicroserviceClients } from '../common/clients/microservice-clients';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import {
   AddFriendDto,
   FriendResponse,
