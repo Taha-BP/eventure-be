@@ -1,5 +1,5 @@
-import { AddFriendDto } from '@eventure/shared-lib';
+import { AddFriendDto, User } from '@eventure/shared-lib';
 
 export type AddFriendPayload = AddFriendDto & {
-  currentUserId: string;
+  currentUser: User;
 };

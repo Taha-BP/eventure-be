@@ -59,7 +59,7 @@ export class EventsService {
       id: savedEvent.id,
       title: savedEvent.title,
       description: savedEvent.description,
-      mediaPath: savedEvent.mediaPath,
+      mediaPath: savedEvent.mediaPath || null,
       creatorId: savedEvent.creatorId,
       creator: {
         id: creator.id,
@@ -135,7 +135,7 @@ export class EventsService {
       id: event.id,
       title: event.title,
       description: event.description,
-      mediaPath: event.mediaPath,
+      mediaPath: event.mediaPath || null,
       creatorId: event.creatorId,
       creator: {
         id: event.creator.id,

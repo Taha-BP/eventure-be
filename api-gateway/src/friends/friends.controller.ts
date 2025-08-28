@@ -23,14 +23,6 @@ import {
 import { Observable } from 'rxjs';
 import { type AuthenticatedRequest } from '@eventure/shared-lib';
 
-interface RequestWithUser extends Request {
-  user: {
-    userId: string;
-    email: string;
-    name: string;
-  };
-}
-
 @ApiTags('friends')
 @Controller('friends')
 @UseGuards(JwtAuthGuard)
@@ -53,11 +45,12 @@ export class FriendsController {
     status: 500,
     description: 'Internal server error',
   })
-  getFriends(@Request() req: RequestWithUser): Observable<FriendResponse[]> {
-    const friendsClient = this.microserviceClients.getFriendsClient();
-    return friendsClient.send<FriendResponse[]>('getFriends', {
-      userId: req.user.userId,
-    });
+  getFriends(
+    @Request() req: AuthenticatedRequest,
+  ): Observable<FriendResponse[]> {
+    return this.microserviceClients
+      .getFriendsClient()
+      .send<FriendResponse[]>('getFriends', { currentUserId: req.user.id });
   }
 
   @Post('add')
@@ -84,7 +77,7 @@ export class FriendsController {
       .getFriendsClient()
       .send<MessageResponse>('addFriend', {
         ...addFriendDto,
-        currentUserId: req.user.id,
+        currentUser: req.user,
       });
   }
 }

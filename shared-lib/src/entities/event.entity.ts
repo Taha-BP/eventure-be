@@ -11,8 +11,8 @@ export class Event extends Base {
   @Column("text")
   description: string;
 
-  @Column()
-  mediaPath: string;
+  @Column({ nullable: true })
+  mediaPath?: string;
 
   @Column()
   creatorId: string;

@@ -56,8 +56,9 @@ export class EventResponse {
     description: "Path to stored media file",
     example: "/uploads/event-123-image.jpg",
     type: String,
+    nullable: true,
   })
-  mediaPath: string;
+  mediaPath?: string;
 
   @ApiProperty({
     description: "Event creator user ID",

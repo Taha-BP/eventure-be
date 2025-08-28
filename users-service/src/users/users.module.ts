@@ -1,33 +1,26 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import {
-  User,
   Event,
   EventAcknowledgment,
   Friendship,
   Token,
-  databaseConfig,
+  User,
 } from '@eventure/shared-lib';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    TypeOrmModule.forRoot(databaseConfig),
     TypeOrmModule.forFeature([
-      User,
       Event,
       EventAcknowledgment,
+      User,
       Friendship,
       Token,
     ]),
   ],
   controllers: [UsersController],
   providers: [UsersService],
-  exports: [UsersService],
 })
 export class UsersModule {}

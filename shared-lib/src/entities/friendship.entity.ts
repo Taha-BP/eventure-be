@@ -1,9 +1,8 @@
-import { Entity, Column, ManyToOne, JoinColumn, Index } from "typeorm";
+import { Entity, Column, ManyToOne, JoinColumn, Index, Unique } from "typeorm";
 import { User } from "./user.entity";
 import { Base } from "./base.entity";
 
 @Entity("friendships")
-@Index(["userId", "friendId"], { unique: true })
 export class Friendship extends Base {
   @Column()
   userId: string;

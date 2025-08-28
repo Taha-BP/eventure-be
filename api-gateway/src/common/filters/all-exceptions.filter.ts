@@ -12,23 +12,26 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    let message = 'Something went wrong';
+    let message = exception?.message || 'Something went wrong';
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+    if ('error' in exception) {
+      exception = exception.error;
+    }
 
     if ('response' in exception) {
       message = Array.isArray(exception.response.message)
         ? exception.response.message.join(', ')
-        : exception.response.message || 'Something went wrong';
+        : exception.response.message || message;
       status =
         exception.response.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
     } else {
-      message = exception.message || 'Something went wrong';
+      message = exception.message || message;
       status = exception.status || HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
-    return response.status(status).json({
-      statusCode: status,
-      message: message,
-    });
+    return response
+      .status(status)
+      .json({ statusCode: status, message: message });
   }
 }

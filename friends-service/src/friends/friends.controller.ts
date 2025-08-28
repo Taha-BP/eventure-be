@@ -9,8 +9,8 @@ export class FriendsController {
   constructor(private readonly friendsService: FriendsService) {}
 
   @MessagePattern('getFriends')
-  async getFriends(@Payload() data: { userId: string }) {
-    return this.friendsService.getFriends(data.userId);
+  async getFriends(@Payload() data: { currentUserId: string }) {
+    return this.friendsService.getFriends(data.currentUserId);
   }
 
   @MessagePattern('addFriend')

@@ -1,24 +1,19 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './auth.service';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import {
-  User,
   Event,
   EventAcknowledgment,
   Friendship,
   Token,
-  databaseConfig,
+  User,
 } from '@eventure/shared-lib';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    TypeOrmModule.forRoot(databaseConfig),
     TypeOrmModule.forFeature([
       User,
       Event,

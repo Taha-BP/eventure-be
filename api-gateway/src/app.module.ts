@@ -3,8 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsersController } from './users/users.controller';
@@ -30,7 +28,11 @@ import configuration from './config/configuration';
       isGlobal: true,
       load: [configuration],
     }),
-    TypeOrmModule.forRoot(databaseConfig),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: databaseConfig,
+    }),
     TypeOrmModule.forFeature([
       User,
       Event,
@@ -51,13 +53,12 @@ import configuration from './config/configuration';
     AuthModule,
   ],
   controllers: [
-    AppController,
     AuthController,
     UsersController,
     FriendsController,
     EventsController,
     LeaderboardController,
   ],
-  providers: [AppService, MicroserviceClients, JwtStrategy, WebsocketGateway],
+  providers: [MicroserviceClients, JwtStrategy, WebsocketGateway],
 })
 export class AppModule {}
